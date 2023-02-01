@@ -5,6 +5,7 @@
 - Linux system requirements: 
 
    Ubuntu 18.04 or higher
+   
    Debian 10 or higher
 
 1. Download latest Halyard:
