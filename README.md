@@ -9,12 +9,15 @@
    Debian 10 or higher
 
 1. Download latest Halyard:
+
 `curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh`
 
 2. Install it:
+
 `sudo bash InstallHalyard.sh`
 
 3. Enable command completion:
+
 `. ~/.bashrc`
 
 
