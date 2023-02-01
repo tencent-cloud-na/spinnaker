@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.kubernetes.io/qcloud-loadbalancer-internal-subnetid: subnet-1l9qpoby
+  labels:
+    app: spin
+    cluster: spin-deck
+  name: spin-deck-private
+  namespace: spinnaker
+spec:
+  allocateLoadBalancerNodePorts: true
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: spin
+    cluster: spin-deck
+  sessionAffinity: None
+  type: LoadBalancer

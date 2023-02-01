@@ -1,0 +1,8 @@
+env:
+  readinessProbe:
+    failureThreshold: 30
+    periodSeconds: 10
+    initialDelaySeconds: 120
+  livenessProbe:
+    initialDelaySeconds: 600
+    periodSeconds: 30
