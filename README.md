@@ -2,15 +2,18 @@
 
 ## Step 1: Install Halyard 
 
-[^1]: Linux system requirements: 
+- Linux system requirements: 
 
-Ubuntu 18.04 or higher
-Debian 10 or higher
+   Ubuntu 18.04 or higher
+   Debian 10 or higher
 
-Download latest Halyard:
+1. Download latest Halyard:
 `curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh`
 
+2. Install it:
 `sudo bash InstallHalyard.sh`
+
+3. Enable command completion:
 `. ~/.bashrc`
 
 
