@@ -1,6 +1,6 @@
 # Deploy Spinnaker on TKE
 
-Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find an example of application [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/DEPLOY.md).
+Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find an example of application [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
 
 ## Step 1: Install Halyard
 
@@ -12,20 +12,28 @@ Follow the process below, you should be able to install Spinnaker on Tencent Clo
 
 1. Download latest Halyard:
 
-   `curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh`
+   ```
+   curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
+   ```
 
 2. Install it:
 
-   `sudo bash InstallHalyard.sh`
+   ```
+   sudo bash InstallHalyard.sh
+   ```
 
 3. Enable command completion:
 
-   `. ~/.bashrc`
+   ```
+   . ~/.bashrc
+   ```
 
 
 [Other installation methods](https://spinnaker.io/docs/setup/install/halyard)
 
-## Step 2: Set up Environment Virables
+## Step 2: Set up Environment Variables
+
+Set up part of the environment variables that will be used later.
 
 ```
 export SPINCONFIG=./Spinnaker_k8s_config_file
@@ -71,7 +79,9 @@ export DRTCR=Spinnaker_TCR_Account_Name
 
    Add Spinnaker k8s account
 
-   `hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT `
+   ```
+   hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT
+   ```
 
 The above process is on Kubernetes v1.22. If you work on v1.24, you need to add one more step to generate secret and bind to service account because Kubernetes no longer generates sercets when a service account is created in v1.24. You can uncomment related blocks in `main.tf` to bind the secret automatically.
 
@@ -83,7 +93,9 @@ Modify the arguments and follow the process in the previous section to add the k
 
 Enable Docker Registry Provider:
 
-`hal config provider docker-registry enable`
+```
+hal config provider docker-registry enable
+```
 
 Add Spinnaker TCR account (if you don't supply the value of --secret-access-key on the command line, you will be prompted to enter the value on STDIN once the command has started running):
 
@@ -110,13 +122,15 @@ hal config storage s3 edit \
 
 Set the storage source to it:
 
-`hal config storage edit --type s3`
+```hal config storage edit --type s3
+```
 
 ### COS Artifacts Account
 
 Enable the artifact provider:
 
-`hal config artifact s3 enable`
+```hal config artifact s3 enable
+```
 
 Add an artifact account:
 
@@ -129,19 +143,26 @@ hal config artifact s3 account add $COSART \
 
 First, you need to set a distributed Spinnaker installation onto one of the Kubernetes cluster accounts:
 
-`hal config deploy edit --type distributed --account-name $SPINTKE`
+```
+hal config deploy edit --type distributed --account-name $SPINTKE
+```
 
 Choose Spinnaker Verison you are going to install:
 
-`hal config version edit --version 1.29.2`
+```
+hal config version edit --version 1.29.2
+```
 
 Modify `liveness-probe-initial-delay-seconds` value to to the upper bound of your longest service startup time:
 
-`hal config deploy edit --liveness-probe-enabled true --liveness-probe-initial-delay-seconds 180`
+```
+hal config deploy edit --liveness-probe-enabled true --liveness-probe-initial-delay-seconds 180
+```
 
 Deploy Spinnaker:
 
-`hal deploy apply`
+```hal deploy apply
+```
 
 ## Step 5: Expose Spinnaker Services to a private Load Balancer
 
@@ -163,10 +184,12 @@ hal config security ui edit --override-base-url http://${UI_URL}
 
 Deploy the settings:
 
-`hal deploy apply`
+```
+hal deploy apply
+```
 
 After all these steps, you should be able to access the Spinnaker UI and see all the accounts you set previously.
 
 ![Spin_UI](https://github.com/tencent-cloud-na/spinnaker/blob/main/screenshots/spin_1.png)
 
-To see an example of how to deploy an application to one of your TKE cluster, you can visit [this page](https://github.com/tencent-cloud-na/spinnaker/blob/main/DEPLOY.md).
+To see an example of how to deploy an application to one of your TKE cluster, you can visit [this page](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
