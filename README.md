@@ -1,6 +1,6 @@
 # Deploy Spinnaker on TKE
 
-Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find
+Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find an example of application [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/DEPLOY.md).
 
 ## Step 1: Install Halyard
 
