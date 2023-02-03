@@ -65,3 +65,6 @@ $ export UI_URL=$(kubectl -n $NAMESPACE get svc spin-deck-private -o jsonpath='{
 $ export API_URL=$(kubectl -n $NAMESPACE get svc spin-gate-private -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 $ hal config security api edit --override-base-url http://${API_URL}
 $ hal config security ui edit --override-base-url http://${UI_URL}
+$ hal deploy apply
+$
+$
