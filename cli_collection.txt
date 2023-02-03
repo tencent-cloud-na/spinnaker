@@ -1,0 +1,67 @@
+# Install Halyard
+$ curl -O https://raw.githubusercontent.com/spinnaker/halyard/master/install/debian/InstallHalyard.sh
+$ sudo bash InstallHalyard.sh
+$ . ~/.bashrc
+
+# Set Environment Variables
+$ export SPINCONFIG=./Spinnaker_k8s_config_file
+$ export WPCONFIG=./Wordpress_k8s_config_file
+$ export CONTEXT=$(kubectl config current-context --kubeconfig=$SPINCONFIG) #Spinnaker k8s context
+$ export NAMESPACE=spinnaker
+$ export SPINTKE=Spinnaker_TKE_Account_Name
+$ export COSART=Spinnaker_COS_Artifacts_Account_Name
+$ export DRTCR=Spinnaker_TCR_Account_Name
+
+# Configure Spinnaker
+## Add Spinnaker TKE Account
+$ terraform apply
+$ $ export TOKEN=$(kubectl get secret --context $CONTEXT --kubeconfig=$SPINCONFIG\
+                 $(kubectl get serviceaccount spinnaker-sa \
+                    --context $CONTEXT \
+                    --kubeconfig=$SPINCONFIG \
+                    -n $NAMESPACE \
+                    -o jsonpath='{.secrets[0].name}') \
+                  -n spinnaker \
+                  -o jsonpath='{.data.token}' | base64 --decode)
+$ kubectl config set-credentials ${CONTEXT}-token-user --kubeconfig=$SPINCONFIG --token $TOKEN
+$ kubectl config set-context $CONTEXT --kubeconfig=$SPINCONFIG --user ${CONTEXT}-token-user
+$ hal config provider kubernetes enable
+$ hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT
+
+## Add Spinnaker Managed TKE Accounts
+###Same process as above
+
+## Add TCR Account
+$ hal config provider docker-registry enable
+$ hal config provider docker-registry account add $DRTCR \
+    --address https://TCR_address \
+    --repositories TCR_repo \
+    --username TCR_username \
+    --password
+
+## COS Storage
+$ hal config storage s3 edit \
+    --access-key-id IKIDToxsh***aIqCOM6bstgGfqm \
+    --secret-access-key \
+    --endpoint cos.na-siliconvalley.myqcloud.com \
+    --bucket your-cos-bucket \
+    --root-folder spinnaker
+$ hal config storage edit --type s3
+
+## Add COS Artifacts Account
+$ hal config artifact s3 enable
+$ hal config artifact s3 account add $COSART \
+    --api-endpoint cos.na-siliconvalley.myqcloud.com
+
+## Deploy Spinnaker
+$ hal config deploy edit --type distributed --account-name $SPINTKE
+$ hal config version edit --version 1.29.2
+$ hal config deploy edit --liveness-probe-enabled true --liveness-probe-initial-delay-seconds 180
+$ hal deploy apply
+
+## Expose Spinnanker Service
+$ terraform apply
+$ export UI_URL=$(kubectl -n $NAMESPACE get svc spin-deck-private -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+$ export API_URL=$(kubectl -n $NAMESPACE get svc spin-gate-private -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+$ hal config security api edit --override-base-url http://${API_URL}
+$ hal config security ui edit --override-base-url http://${UI_URL}

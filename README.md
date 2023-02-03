@@ -1,6 +1,8 @@
 # Deploy Spinnaker on TKE
 
-Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find an example of application [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
+Follow the process below, you should be able to install Spinnaker on Tencent Cloud TKE service. After installation, you can find a basic example of using Spinnaker to deploy WordPress on specified TKE cluster [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/wordpress_deployment_example.md).
+
+You can also find all the command lines that are used below [here](https://github.com/tencent-cloud-na/spinnaker/blob/main/cli_collection.txt).
 
 ## Step 1: Install Halyard
 
@@ -80,6 +82,8 @@ export DRTCR=Spinnaker_TCR_Account_Name
    Add Spinnaker k8s account
 
    ```
+   hal config provider kubernetes enable
+
    hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT
    ```
 
@@ -122,14 +126,16 @@ hal config storage s3 edit \
 
 Set the storage source to it:
 
-```hal config storage edit --type s3
+```
+hal config storage edit --type s3
 ```
 
 ### COS Artifacts Account
 
 Enable the artifact provider:
 
-```hal config artifact s3 enable
+```
+hal config artifact s3 enable
 ```
 
 Add an artifact account:
@@ -138,6 +144,8 @@ Add an artifact account:
 hal config artifact s3 account add $COSART \
   --api-endpoint cos.na-siliconvalley.myqcloud.com
 ```
+
+**_Please make sure `cos` add-on has been installed into the TKE cluster where Spinnaker is going to install._**
 
 ## Step 4: Deploy Spinnaker
 
@@ -161,7 +169,8 @@ hal config deploy edit --liveness-probe-enabled true --liveness-probe-initial-de
 
 Deploy Spinnaker:
 
-```hal deploy apply
+```
+hal deploy apply
 ```
 
 ## Step 5: Expose Spinnaker Services to a private Load Balancer
@@ -192,4 +201,7 @@ After all these steps, you should be able to access the Spinnaker UI and see all
 
 ![Spin_UI](https://github.com/tencent-cloud-na/spinnaker/blob/main/screenshots/spin_1.png)
 
-To see an example of how to deploy an application to one of your TKE cluster, you can visit [this page](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
+To see a basic example of how to deploy a WordPress application to one of your TKE clusters, you can visit [this page](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
+
+## Delete Deployed Spinnaker Service
+To delete deployed Spinnaker, run `hal deploy clean`.
