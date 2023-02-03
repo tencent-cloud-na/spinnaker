@@ -45,6 +45,7 @@ export NAMESPACE=spinnaker
 export SPINTKE=Spinnaker_TKE_Account_Name
 export COSART=Spinnaker_COS_Artifacts_Account_Name
 export DRTCR=Spinnaker_TCR_Account_Name
+export SPIN_VERSION=1.29.2
 ```
 
 
@@ -52,7 +53,7 @@ export DRTCR=Spinnaker_TCR_Account_Name
 ## Step 3: Configure Spinnaker Accounts and Storage
 ### Spinnaker TKE Cluster Account
 
-1. Use Terraform to create `spinnaker` namespace, service account, and bind role to it on k8s:
+1. Use Terraform to create `spinnaker` namespace, service account, and bind role to it:
 
    Change the yaml file configuration in ~/settings, then run `terraform apply`.
 
@@ -87,7 +88,7 @@ export DRTCR=Spinnaker_TCR_Account_Name
    hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT
    ```
 
-The above process is on Kubernetes v1.22. If you work on v1.24, you need to add one more step to generate secret and bind to service account because Kubernetes no longer generates sercets when a service account is created in v1.24. You can uncomment related blocks in `main.tf` to bind the secret automatically.
+The above process is on Kubernetes v1.22. If you work on v1.24+, you need to add one more step to generate secret and bind to service account because Kubernetes no longer generates sercets when a service account is created in v1.24. You can uncomment related blocks in `main.tf` to bind the secret automatically.
 
 ### Spinnaker Managed TKE Cluster Account
 
@@ -158,7 +159,7 @@ hal config deploy edit --type distributed --account-name $SPINTKE
 Choose Spinnaker Verison you are going to install:
 
 ```
-hal config version edit --version 1.29.2
+hal config version edit --version $SPIN_VERSION
 ```
 
 Modify `liveness-probe-initial-delay-seconds` value to to the upper bound of your longest service startup time:
