@@ -204,5 +204,20 @@ After all these steps, you should be able to access the Spinnaker UI and see all
 
 To see a basic example of how to deploy a WordPress application to one of your TKE clusters, you can visit [this page](https://github.com/tencent-cloud-na/spinnaker/blob/main/Wordpress_Deployment_Example.md).
 
+## Upgrade Spinnaker Version
+
+If you want to change Spinnaker versions using Halyard, you can read about supported versions like so:
+
+```
+hal version list
+```
+
+And pick a new version like so:
+
+```
+hal config version edit --version $VERSION
+hal deploy apply
+```
+
 ## Delete Deployed Spinnaker Service
 To delete deployed Spinnaker, run `hal deploy clean`.
