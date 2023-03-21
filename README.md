@@ -85,7 +85,7 @@ export SPIN_VERSION=1.29.2
    ```
    hal config provider kubernetes enable
 
-   hal config provider kubernetes account add $SPINTKE --kubeconfig=$SPINCONFIG --context $CONTEXT
+   hal config provider kubernetes account add $SPINTKE --kubeconfig-file=$SPINCONFIG --context $CONTEXT
    ```
 
 The above process is on Kubernetes v1.22. If you work on v1.24+, you need to add one more step to generate secret and bind to service account because Kubernetes no longer generates sercets when a service account is created in v1.24. You can uncomment related blocks in `main.tf` to bind the secret automatically.
